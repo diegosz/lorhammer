@@ -1,6 +1,7 @@
 # Changelog
 
 ## Version 0.3.0 - [UNRELEASED]
+* **CI** partially use make to build
 
 ## Version 0.2.2 - 2017-10-27 - [binaries](https://gitlab.com/itk.fr/lorhammer/tags/0.2.2)
 
