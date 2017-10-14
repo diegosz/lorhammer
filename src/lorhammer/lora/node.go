@@ -87,7 +87,7 @@ func GetPushDataPayload(node *model.Node, fcnt uint32) ([]byte, error) {
 		LOG_NODE.WithFields(logrus.Fields{
 			"DevEui": node.DevEUI.String(),
 		}).Warn("empty payload array given. So it send \"LorHammer\"")
-		frmPayloadByteArray, _ = hex.DecodeString("LorHammer")
+		frmPayloadByteArray = []byte("LorHammer")
 	} else {
 		var i int
 		if node.RandomPayloads == true {
@@ -129,7 +129,15 @@ func GetPushDataPayload(node *model.Node, fcnt uint32) ([]byte, error) {
 		},
 	}
 
-	err := phyPayload.SetMIC(node.NwSKey)
+	err := phyPayload.EncryptFRMPayload(node.AppSKey)
+	if err != nil {
+		LOG_NODE.WithFields(logrus.Fields{
+			"ref": "lorhammer/lora/node:GetPushDataPayload()",
+			"err": err,
+		}).Fatal("Could not encrypt FRMPayload")
+	}
+
+	err = phyPayload.SetMIC(node.NwSKey)
 
 	if err != nil {
 		LOG_NODE.WithFields(logrus.Fields{
